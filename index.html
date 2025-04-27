@@ -11,134 +11,106 @@
   
   
   <style>
-    /* Estilos Generales */
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
 
-    .container {
-      max-width: 360px;
-      margin: 50px auto;
-      background: white;
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-    }
 
-    h2 {
-      font-size: 18px;
-      margin-top: 20px;
-      color: #555;
-    }
 
-    .rate {
-      color: #1a73e8;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+@media only screen and (max-width: 768px) {
+  /* Ajustes para pantallas más pequeñas */
+  
+  header {
+    padding: 10px 20px; /* Reduce el padding */
+    flex-direction: column; /* Coloca los elementos en columna */
+    text-align: center;
+    max-height: auto; /* Ajusta la altura */
+  }
+  
+  .logo {
+    font-size: 2.5em; /* Ajusta el tamaño del logo */
+    margin-bottom: 10px; /* Añade espacio debajo */
+  }
+  
+  nav ul {
+    flex-direction: column; /* Cambia el menú a una lista vertical */
+    align-items: center;
+  }
+  
+  nav li {
+    margin: 10px 0; /* Espacio entre los elementos del menú */
+  }
+  
+  .banner {
+    height: 300px; /* Reduce el tamaño del banner */
+    padding-left: 20px; /* Ajusta el espacio a la izquierda */
+    text-align: center; /* Centra el texto */
+  }
 
-    /* Selector de Moneda */
-    .moneda-selector {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
+  .banner h1 {
+    font-size: 2.5em; /* Reduce el tamaño del título */
+  }
 
-    .moneda-selector button {
-      flex: 1;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      background: #fff;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-      margin: 5px;
-      border-radius: 5px;
-    }
+  .banner p {
+    font-size: 1.2em; /* Reduce el tamaño del texto */
+  }
 
-    .moneda-selector button.active {
-      background: #f0a500;
-      color: white;
-      border: none;
-    }
+  .footer-button {
+    font-size: 14px; /* Ajusta el tamaño de los botones del pie de página */
+  }
 
-    /* Estilos para los campos de entrada */
-    .input-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+  .moneda-selector {
+    flex-direction: column; /* Los botones de moneda en columna */
+  }
+  
+  .input-group {
+    flex-direction: column; /* Los inputs en columna */
+    align-items: flex-start; /* Alineación hacia la izquierda */
+  }
 
-    .input-group input {
-      padding: 10px;
-      font-size: 16px;
-      width: 48%;
-      margin-right: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
+  .input-group input {
+    width: 100%; /* Asegura que los inputs ocupen todo el ancho */
+    margin-right: 0; /* Elimina el margen entre inputs */
+  }
 
-    .input-group input[disabled] {
-      background: #e9ecef;
-      color: #666;
-    }
+  .calcular-btn {
+    font-size: 14px; /* Ajusta el tamaño del botón */
+    padding: 12px; /* Ajusta el padding */
+  }
+}
 
-    .input-group .equal {
-      font-size: 24px;
-      margin-right: 10px;
-    }
 
-    .calcular-btn {
-      width: 100%;
-      background: #00b0f0;
-      color: white;
-      padding: 15px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-      border-radius: 5px;
-    }
 
-    .calcular-btn:hover {
-      background: #0095d9;
-    }
-
-    /* Estilos del Header */
     header {
-      background-color: #012e1a;
-      color: #000000;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      position: relative;
-    }
+   background-color: #012e1a;
+   color: rgb(0, 0, 0);
+   padding: 20px 40px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   max-height: 100px;
+   position: relative;
+   z-index: 1000; /* Asegura que el encabezado esté encima de otros elementos */
+}
+
+
 
     .logo {
       font-weight: bold;
-      font-size: 3em;
+      font-size: 3.8em;
       letter-spacing: 1px;
-      color: white;
     }
 
     nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* permite que se ajuste si es muy grande */
+  align-items: center;
+}
 
     nav li {
       margin: 0 18px;
+      position: relative;
     }
 
     nav a {
@@ -152,18 +124,22 @@
       color: #f0a500;
     }
 
-    /* Estilos del Menu Desplegable */
     .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #ffffff;
-      min-width: 350px;
-      z-index: 1001;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      padding: 10px;
-      border-radius: 5px;
-      max-height: 550px;
-      overflow-y: auto;
+   display: none;
+   position: absolute;
+   background-color: #ffffff;
+   min-width: 350px;
+   z-index: 1001; /* Debería estar encima de cualquier otro elemento */
+   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+   padding: 10px;
+   border-radius: 5px;
+   max-height: 550px;
+   overflow-y: auto;
+}
+
+
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
     }
 
     .dropdown:hover .dropdown-content {
@@ -181,65 +157,28 @@
       background-color: #f0f0f0;
     }
 
-    /* Banner */
     .banner {
-      background: url('https://images.unsplash.com/photo-1511920170033-f8396924c348') no-repeat center center/cover;
-      color: white;
-      height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-left: 50px;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-      transition: background-image 1s ease-in-out;
-    }
+  background: url('https://images.unsplash.com/photo-1511920170033-f8396924c348') no-repeat center center/cover;
+  color: white;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 50px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+  transition: background-image 1s ease-in-out;
+}
+.banner h1 {
+  font-size: 3.5em;
+  margin: 0;
+}
+.banner p {
+  font-size: 1.5em;
+  margin-top: 10px;
+}
 
-    .banner h1 {
-      font-size: 3.5em;
-      margin: 0;
-    }
-
-    .banner p {
-      font-size: 1.5em;
-      margin-top: 10px;
-    }
-
-    /* Estilos para botones del Pie de Página */
-    .footer-button {
-      background: none;
-      border: none;
-      color: white;
-      text-align: left;
-      padding: 0;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .footer-button:hover {
-      text-decoration: underline;
-      color: #FFD700;
-    }
-
-    /* Icono de Usuario */
-    #user-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #08a15f;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    #user-icon img {
-      width: 20px;
-      height: 20px;
-    }
-
-    /* Menú Desplegable de Usuario */
     .user-menu {
       display: none;
       position: absolute;
@@ -270,7 +209,6 @@
       cursor: pointer;
     }
 
-    /* Login Box */
     #login-box {
       display: none;
       position: absolute;
@@ -289,12 +227,108 @@
       color: #04b166;
     }
 
-    /* Estilos de CSS del segundo bloque (más pequeño) */
+    .g_id_signin {
+      margin-top: 10px;
+    }
+
+    .products-section {
+      display: none;
+      padding: 20px;
+      background-color: #ffffff;
+      border-top: 2px solid #029153;
+    }
+
+    .products-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .products-section li {
+      padding: 10px;
+      background-color: #f4f4f4;
+      margin: 5px 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Diseño para el usuario y el menú */
+    #user-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #08a15f;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #user-icon img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Menú desplegable */
+    .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 220px;
+  z-index: 1000; /* Asegúrate de que el dropdown esté encima de todo */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+    .dropdown:hover .dropdown-content {
+      display: block;
+     }
+    .dropdown-content li:hover {
+      background-color: #f0f0f0;
+      color: #047745;
+    }
+ .logo-img {
+  height: 140px;  /* más pequeño que 80px */
+  width: auto;
+  object-fit: contain;
+  max-width: 2000px; /* asegura que no se pase */
+}
+.footer-button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
+  color: #FFD700; /* Un dorado bonito al pasar el mouse */
+}
+
+  </style>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+  max-width: 300px;
+  margin: 50px auto;
+  background: white;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
     .moneda-selector {
       display: flex;
       margin-bottom: 20px;
     }
-
     .moneda-selector button {
       flex: 1;
       padding: 10px;
@@ -304,104 +338,55 @@
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
     }
-
     .moneda-selector button.active {
       background: orange;
       color: white;
       border: none;
     }
-
-    /* Responsive */
-    @media only screen and (max-width: 768px) {
-      /* Ajustes para pantallas más pequeñas */
-      header {
-        padding: 15px;
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .logo {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-      }
-
-      nav ul {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      nav li {
-        margin: 10px 0;
-      }
-
-      .banner {
-        height: 300px;
-        padding-left: 20px;
-        text-align: center;
-      }
-
-      .banner h1 {
-        font-size: 2.5em;
-      }
-
-      .banner p {
-        font-size: 1.2em;
-      }
-
-      .footer-button {
-        font-size: 14px;
-      }
-
-      .moneda-selector {
-        flex-direction: column;
-      }
-
-      .input-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .input-group input {
-        width: 100%;
-        margin-right: 0;
-      }
-
-      .calcular-btn {
-        font-size: 14px;
-        padding: 12px;
-      }
+    h2 {
+      font-size: 18px;
+      margin-top: 20px;
+      color: #555;
     }
-
-    /* Estilos para pantallas muy pequeñas */
-    @media only screen and (max-width: 480px) {
-      .container {
-        max-width: 95%;
-        padding: 20px;
-      }
-
-      header {
-        padding: 10px;
-      }
-
-      .logo {
-        font-size: 2em;
-      }
-
-      .moneda-selector button {
-        font-size: 14px;
-      }
-
-      .input-group input {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-
-      .calcular-btn {
-        padding: 12px;
-      }
+    .rate {
+      color: #1a73e8;
+      margin-bottom: 10px;
+      font-size: 14px;
     }
-</style>
-
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      padding: 10px;
+      font-size: 16px;
+      width: 45%;
+      margin-right: 10px;
+    }
+    .input-group .equal {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .input-group input[disabled] {
+      background: #e9ecef;
+      color: #666;
+      border: 1px solid #ccc;
+    }
+    .calcular-btn {
+      width: 100%;
+      background: #00b0f0;
+      color: white;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .calcular-btn:hover {
+      background: #0095d9;
+    }
+  </style>
 </head>
 <body id="top">
 
