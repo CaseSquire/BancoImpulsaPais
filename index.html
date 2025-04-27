@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Banco Impulsa País</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+   background-color: #012e1a;
+   color: rgb(0, 0, 0);
+   padding: 20px 40px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+   max-height: 100px;
+   position: relative;
+   z-index: 1000; /* Asegura que el encabezado esté encima de otros elementos */
+}
+
+
+
+    .logo {
+      font-weight: bold;
+      font-size: 3.8em;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* permite que se ajuste si es muy grande */
+  align-items: center;
+}
+
+    nav li {
+      margin: 0 18px;
+      position: relative;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    nav a:hover {
+      color: #f0a500;
+    }
+
+    .dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #ffffff;
+   min-width: 350px;
+   z-index: 1001; /* Debería estar encima de cualquier otro elemento */
+   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+   padding: 10px;
+   border-radius: 5px;
+   max-height: 550px;
+   overflow-y: auto;
+}
+
+
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content li {
+      background-color: #f9f9f9;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .dropdown-content li:hover {
+      background-color: #f0f0f0;
+    }
+
+    .banner {
+  background: url('https://images.unsplash.com/photo-1511920170033-f8396924c348') no-repeat center center/cover;
+  color: white;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 50px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+  transition: background-image 1s ease-in-out;
+}
+.banner h1 {
+  font-size: 3.5em;
+  margin: 0;
+}
+.banner p {
+  font-size: 1.5em;
+  margin-top: 10px;
+}
+
+    .user-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      top: 40px;
+      width: 180px;
+      padding: 10px;
+      z-index: 999;
+    }
+
+    .user-menu p {
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .user-menu button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      background-color: #004225;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #login-box {
+      display: none;
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      border-radius: 8px;
+      z-index: 9999;
+    }
+
+    #login-box h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #04b166;
+    }
+
+    .g_id_signin {
+      margin-top: 10px;
+    }
+
+    .products-section {
+      display: none;
+      padding: 20px;
+      background-color: #ffffff;
+      border-top: 2px solid #029153;
+    }
+
+    .products-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .products-section li {
+      padding: 10px;
+      background-color: #f4f4f4;
+      margin: 5px 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Diseño para el usuario y el menú */
+    #user-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #08a15f;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #user-icon img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Menú desplegable */
+    .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 220px;
+  z-index: 1000; /* Asegúrate de que el dropdown esté encima de todo */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+    .dropdown:hover .dropdown-content {
+      display: block;
+     }
+    .dropdown-content li:hover {
+      background-color: #f0f0f0;
+      color: #047745;
+    }
+ .logo-img {
+  height: 140px;  /* más pequeño que 80px */
+  width: auto;
+  object-fit: contain;
+  max-width: 2000px; /* asegura que no se pase */
+}
+.footer-button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.footer-button:hover {
+  text-decoration: underline;
+  color: #FFD700; /* Un dorado bonito al pasar el mouse */
+}
+
+  </style>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+  max-width: 300px;
+  margin: 50px auto;
+  background: white;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+    .moneda-selector {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .moneda-selector button {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .moneda-selector button.active {
+      background: orange;
+      color: white;
+      border: none;
+    }
+    h2 {
+      font-size: 18px;
+      margin-top: 20px;
+      color: #555;
+    }
+    .rate {
+      color: #1a73e8;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      padding: 10px;
+      font-size: 16px;
+      width: 45%;
+      margin-right: 10px;
+    }
+    .input-group .equal {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .input-group input[disabled] {
+      background: #e9ecef;
+      color: #666;
+      border: 1px solid #ccc;
+    }
+    .calcular-btn {
+      width: 100%;
+      background: #00b0f0;
+      color: white;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .calcular-btn:hover {
+      background: #0095d9;
+    }
+  </style>
+</head>
+<body id="top">
+
+
+  <header>
+    <a href="#top">
+      <img src="logo.png" alt="Logo Banco Impulsa País" class="logo-img">
+    </a>
+    <nav>
+      <ul>
+        <li class="dropdown">
+          <a href="#">Tarjetas</a>
+          <ul class="dropdown-content">
+            <li>Tarjeta de crédito</li>
+            <li>Tarjeta de débito</li>
+            <li>Tarjeta prepagada</li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Cuentas</a>
+          <ul class="dropdown-content">
+            <li>Cuenta de Ahorro en Pesos</li>
+            <li>Cuenta Ahorro Más</li>
+            <li>Cuenta de Ahorro Infantil en Pesos</li>
+            <li>Cuenta de Ahorro Infantil en Dólares</li>
+            <li>Cuenta de Ahorro en Dólares</li>
+            <li>Cuenta de Ahorro en Euros</li>
+            <li>Cuenta de Ahorro para Residentes en el Extranjero</li>
+            <li>Cuenta de Ahorro Básica Inclusiva</li>
+            <li>Cuenta de Ahorro Remesas</li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Préstamos</a>
+          <ul class="dropdown-content">
+            <li>Préstamos personales</li>
+            <li>Préstamos hipotecarios</li>
+            <li>Préstamos para vehículos</li>
+            <li>Préstamos educativos</li>
+            <li>Préstamos para pequeñas empresas</li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Inversiones</a>
+          <ul class="dropdown-content">
+            <li>Fondos de inversión</li>
+            <li>Acciones</li>
+            <li>Bonos</li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">Seguros</a>
+          <ul class="dropdown-content">
+            <li>Seguro de vida</li>
+            <li>Seguro de salud</li>
+            <li>Seguro de auto</li>
+          </ul>
+        </li>
+
+ <!-- Nuevo botón de Calculadora -->
+        <li class="dropdown">
+          <a href="#" id="toggle-calculator-btn">Calculadora</a>
+        </li>
+
+        <li id="login-container">
+          <a href="#" id="login-btn">ACCEDER</a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <div class="user-icon" id="user-icon" style="display:none;">
+      <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" width="32" height="32" />
+      <div class="user-menu" id="user-menu">
+        <p id="user-name">Usuario</p>
+        <button onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+</header>
+
+  
+
+  <div id="login-box">
+    <h3>Iniciar sesión</h3>
+    <div class="g_id_signin"
+      data-type="standard"
+      data-shape="pill"
+      data-theme="outline"
+      data-text="signin_with"
+      data-size="large"
+      data-logo_alignment="left">
+    </div>
+  </div>
+
+  <section class="banner">
+    <h1>Banco Impulsa País</h1>
+    <p>Politecnico Santa Mariana Olea</p>
+  </section>
+
+  <div id="g_id_onload"
+      data-client_id="594523571014-qo91eoeq6pdpr3d85tg661ac5v543klv.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-auto_prompt="false">
+  </div>
+  <script>
+    const logo = document.querySelector('header a[href="#top"]');
+    logo.addEventListener('click', function(e) {
+      e.preventDefault(); // Para evitar comportamiento normal
+  
+      // Ocultar todas las secciones
+      document.getElementById('mision-vision').style.display = 'none';
+      document.getElementById('calculator-container').style.display = 'none';
+  
+      // Mostrar contenido principal
+      document.getElementById('contenido-principal').style.display = 'block';
+      document.getElementById('contenido-secundario').style.display = 'block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Hace scroll suave al inicio
+    });
+  </script>
+  
+  <script>
+    const loginBtn = document.getElementById("login-btn");
+    const loginContainer = document.getElementById("login-container");
+    const loginBox = document.getElementById("login-box");
+    const userIcon = document.getElementById("user-icon");
+    const userMenu = document.getElementById("user-menu");
+    const userName = document.getElementById("user-name");
+    let userLoggedIn = false;
+  
+    loginBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // Para que no recargue la página
+      loginBox.style.display = "block";
+    });
+  
+    function handleCredentialResponse(response) {
+      const responsePayload = jwt_decode(response.credential);
+      loginBox.style.display = "none";
+      loginContainer.style.display = "none"; // AHORA se oculta el contenedor completo del botón "Acceder"
+      userLoggedIn = true;
+      userIcon.style.display = "flex";
+      userName.innerHTML = responsePayload.name;
+    }
+  
+    function logout() {
+      userLoggedIn = false;
+      userIcon.style.display = "none";
+      loginContainer.style.display = "block"; // Volver a mostrar el botón "Acceder" al cerrar sesión
+      userMenu.style.display = "none";
+    }
+  
+    document.getElementById("user-icon").addEventListener("click", () => {
+      if (userLoggedIn) {
+        userMenu.style.display = userMenu.style.display === "block" ? "none" : "block";
+      }
+    });
+
+    
+  </script>
+  <script>
+  const images = [
+    "https://images.unsplash.com/photo-1511920170033-f8396924c348",
+    "https://virtual.cuc.edu.co/hubfs/trabajos-para-financieros.jpg",
+    "https://ecuador.unir.net/wp-content/uploads/sites/8/2023/03/finanzasecuador1.jpg"
+  ];
+
+  let current = 0;
+  const banner = document.querySelector('.banner');
+
+  banner.style.backgroundImage = `url('${images[current]}')`;
+
+  setInterval(() => {
+    current = (current + 1) % images.length;
+    banner.style.backgroundImage = `url('${images[current]}')`;
+  }, 6000);
+</script>
+
+
+<div id="contenido-secundario">
+<div id="contenido-principal">
+<section id="quienes-somos" style="padding: 4rem 2rem; text-align: center; background-color: #f9f9f9;">
+  <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #003366;">¿Quiénes Somos?</h2>
+  <p style="max-width: 900px; margin: 0 auto; font-size: 1.1rem; line-height: 1.8; color: #333;">
+    Somos Banco Impulsa País, una institución financiera que promueve el desarrollo de la República Dominicana, combinando tecnología,
+     educación financiera y apoyo al emprendimiento. Ofrecemos servicios accesibles, atención 
+    personalizada en sucursales estratégicas y trabajamos por la inclusión y el crecimiento sostenible en todo el país.
+  </p>
+</section>
+
+
+
+  
+  <section style="display: flex; align-items: center; justify-content: center; padding: 50px 20px; max-width: 1200px; margin: auto;">
+    <div style="flex: 1; min-width: 300px;">
+      <img src="imagen-cuenta-corriente.jpg" alt="Cuenta Corriente Personal" style="width: 100%; border-radius: 8px;">
+    </div>
+    <div style="flex: 1; min-width: 300px; padding: 20px;">
+      <h2 style="color: #1f4e79;">Cuenta corriente personal</h2>
+      <p style="color: #444;">
+        ¿Quieres manejar tu dinero de forma fácil y segura? Nuestra <strong>Cuenta Corriente Personal</strong> está pensada para ti. 
+        Con acceso inmediato a tus fondos mediante tarjeta de débito o chequera, tendrás la libertad de hacer pagos, compras y transferencias cuando lo necesites. 
+        Es tu mejor aliado para el día a día, con la comodidad que mereces y la confianza que necesitas.
+      </p>
+      <div style="margin-top: 20px;">
+        <a href="#" style="padding: 10px 20px; border: 2px solid orange; color: orange; border-radius: 5px; text-decoration: none; margin-right: 10px;">Quiero saber más</a>
+        <a href="#" style="padding: 10px 20px; border: 2px solid #00a3e0; color: #00a3e0; border-radius: 5px; text-decoration: none;">Ver condiciones</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; align-items: center; justify-content: center; padding: 50px 20px; max-width: 1200px; margin: auto;">
+    <div style="flex: 1; min-width: 300px;">
+      <img src="Cuenta-Ahorro-Más.png" alt="Cuenta Ahorro Más" style="width: 100%; border-radius: 8px;">
+    </div>
+    <div style="flex: 1; min-width: 300px; padding: 20px;">
+      <h2 style="color: #1f4e79;">Cuenta Ahorro Más</h2>
+      <p style="color: #444;">
+        ¿Quieres ver crecer tus ahorros sin preocuparte por comisiones? Con nuestra <strong>Cuenta Ahorro Más</strong> puedes hacerlo de manera simple y segura.
+        A medida que vas aumentando tu saldo, también disfrutas de una mejor tasa de interés. Es la manera ideal de darle más valor a tu esfuerzo día a día.
+      </p>
+      <div style="margin-top: 20px;">
+        <a href="#" style="padding: 10px 20px; border: 2px solid orange; color: orange; border-radius: 5px; text-decoration: none; margin-right: 10px;">Quiero saber más</a>
+        <a href="#" style="padding: 10px 20px; border: 2px solid #00a3e0; color: #00a3e0; border-radius: 5px; text-decoration: none;">Ver condiciones</a>
+      </div>
+    </div>
+  </section>
+
+  <section style="display: flex; align-items: center; justify-content: center; padding: 50px 20px; max-width: 1200px; margin: auto;">
+    <div style="flex: 1; min-width: 300px;">
+      <img src="tu-imagen.jpg" alt="Ahorro Infantil Banreservas" style="width: 100%; border-radius: 8px;">
+    </div>
+    <div style="flex: 1; min-width: 300px; padding: 20px;">
+      <h2 style="color: #1f4e79;">Ahorro Infantil</h2>
+      <p style="color: #444;">
+        ¿Te imaginas ver a tus hijos aprender el valor del dinero desde pequeños? Con nuestra <strong>Cuenta de Ahorro Infantil</strong>, puedes ayudarlos a construir su futuro mientras desarrollan el hábito del ahorro de forma divertida y segura. 
+        Es una excelente manera de enseñarles a soñar en grande, alcanzar sus metas y administrar sus finanzas desde ahora. ¡Regálales hoy la llave de su independencia financiera mañana!
+      </p>
+      <div style="margin-top: 20px;">
+        <a href="#" style="padding: 10px 20px; border: 2px solid orange; color: orange; border-radius: 5px; text-decoration: none; margin-right: 10px;">Quiero saber más</a>
+        <a href="#" style="padding: 10px 20px; border: 2px solid #00a3e0; color: #00a3e0; border-radius: 5px; text-decoration: none;">Ver condiciones</a>
+      </div>
+    </div>
+  </section>
+  
+</div>
+<div id="calculator-container" style="display: none;">
+  <div class="moneda-selector">
+    <button id="btn-dolares" class="active">$ Dólares</button>
+    <button id="btn-euros">€ Euros</button>
+  </div>
+
+  <h2>COMPRAMOS</h2>
+  <div class="rate" id="rate-compra">US$ 1.00 = RD$ 58.40</div>
+  <div class="input-group">
+    <input type="number" id="compra-input" placeholder="US$ 0.00">
+    <div class="equal">=</div>
+    <input type="text" id="compra-resultado" disabled>
+  </div>
+
+  <h2>VENDEMOS</h2>
+  <div class="rate" id="rate-venta">US$ 1.00 = RD$ 60.25</div>
+  <div class="input-group">
+    <input type="number" id="venta-input" placeholder="US$ 0.00">
+    <div class="equal">=</div>
+    <input type="text" id="venta-resultado" disabled>
+  </div>
+
+  <button class="calcular-btn" onclick="calcular()">CALCULAR</button>
+</div>
+
+</div>
+<div id="mision-vision" style="display: none; padding: 40px; background: #f9f9f9;">
+  <section style="padding: 60px 20px; background-color: #f9f9f9; text-align: center;">
+    <h2 style="font-size: 2.5em; color: #004225; margin-bottom: 40px;">Misión, Visión y Valores</h2>
+  
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1200px; margin: auto;">
+  
+      <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex: 1; min-width: 280px; max-width: 350px;">
+        <h3 style="color: #1f4e79; margin-bottom: 15px;">Misión</h3>
+        <p style="color: #555;">
+          Impulsar el progreso económico y social de la República Dominicana, ofreciendo soluciones financieras innovadoras y accesibles para individuos, familias y emprendedores, 
+          fomentando la educación financiera y apoyando sus proyectos para construir un futuro próspero para todos.
+        </p>
+      </div>
+  
+      <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex: 1; min-width: 280px; max-width: 350px;">
+        <h3 style="color: #1f4e79; margin-bottom: 15px;">Visión</h3>
+        <p style="color: #555;">
+          Ser el banco líder en la República Dominicana, reconocido por su compromiso con el desarrollo integral del país, la innovación en sus servicios y la confianza 
+          que genera en sus clientes.
+         </p>
+      </div>
+  
+      <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex: 1; min-width: 280px; max-width: 350px;">
+        <h3 style="color: #1f4e79; margin-bottom: 15px;">Valores</h3>
+        <p style="color: #555;">
+          Progreso, 
+Confianza, 
+Innovación, 
+Compromiso, 
+Inclusión, 
+Responsabilidad.
+        </p>
+      </div>
+  
+    </div>
+  </section>
+</div>
+
+<script>
+  function mostrarMisionVision() {
+    document.getElementById('contenido-secundario').style.display = 'none';
+    document.getElementById('mision-vision').style.display = 'block';
+  }
+  </script>
+<script>
+  const toggleCalculatorBtn = document.getElementById('toggle-calculator-btn');
+  const contenidoPrincipal = document.getElementById('contenido-principal');
+  const calculator = document.getElementById('calculator-container');
+
+  toggleCalculatorBtn.addEventListener('click', function() {
+    contenidoPrincipal.style.display = 'none'; // Oculta todo
+    calculator.style.display = 'block';        // Muestra calculadora
+  });
+</script>
+
+
+</div>
+
+
+
+  <footer style="background-color:#004225; color: rgb(255, 255, 255); padding: 40px 20px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; max-width: 1200px; margin: auto;">
+      
+      <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+        <h3 style="text-decoration: underline;">CONTACTO</h3>
+        <p>📞 829 546 9638</p>
+        <p>📍 Encuentra una Oficina, Cajero o Subagente</p>
+        <button class="footer-button">✉️ contacto@BanImpulsa.com</button>
+        <p>¿Deseas invertir en República Dominicana?</p>
+        <div style="margin-top: 10px;">
+          <a href="https://www.facebook.com/tu-pagina" target="_blank">
+            <img src="icono-facebook.jpg" alt="Facebook" width="29">
+          </a>
+          <a href="https://www.instagram.com/tu-pagina" target="_blank">
+            <img src="icono-instagram.jpg" alt="Instagram" width="29">
+          </a>
+          <a href="https://www.youtube.com/@BancoImpulsaPais" target="_blank">
+            <img src="icono-youtube.png" alt="YouTube" width="29">
+          </a>
+        </div>
+        
+      </div>
+  
+      <div style="flex: 1; min-width: 200px; margin-bottom: 30px;">
+        <h3 style="text-decoration: underline;">SOBRE NOSOTROS</h3>
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+      
+          <button onclick="mostrarMisionVision()" class="footer-button">Visión, Misión y Valores</button>
+          <button class="footer-button">Voluntariado</button>
+          <button class="footer-button">Centro Cultural</button>
+          <button class="footer-button">Responsabilidad Social</button>
+          <button class="footer-button">Memorias Anuales</button>
+      
+        </ul>
+      </div></p>
+      
+      
+  
+   <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+  <h3 style="text-decoration: underline;">FILIALES</h3>
+  <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+    <button class="footer-button">ARS Impulsa</button>
+    <button class="footer-button">Seguros Impulsa</button>
+    <button class="footer-button">AFP Impulsa</button>
+    <!-- Y más -->
+  </ul>
+</div>
+
+<p<div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+  <h3 style="text-decoration: underline;">INFORMACIONES</h3>
+  <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+    <button class="footer-button">Tu seguridad</button>
+    <button class="footer-button">Monitor financiero</button>
+    <!-- Enlace al PDF del tarifario -->
+    <a href="https://drive.google.com/file/d/1J4d6lUjy652EG09nMJkA4d6IddVUZLbv/view?usp=drive_link" target="_blank">
+      <button class="footer-button">Tarifario de productos</button>
+    </a>
+    <!-- Y más -->
+  </ul>
+</div>
+
+  
+    <p style="text-align: center; margin-top: 20px; font-size: 0.9em;">
+      © 2025 Banco Impulsa País. Todos los derechos reservados.
+    </p>
+  </footer>
+  
+  
+  
+  
+    <script>
+      // Variables de tasa
+      let tasaCompra = 58.40;
+      let tasaVenta = 60.25;
+    
+      // Botones de moneda
+      document.getElementById('btn-dolares').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('btn-euros').classList.remove('active');
+        tasaCompra = 58.40;
+        tasaVenta = 60.25;
+        document.getElementById('rate-compra').innerText = 'US$ 1.00 = RD$ 58.40';
+        document.getElementById('rate-venta').innerText = 'US$ 1.00 = RD$ 60.25';
+      });
+    
+      document.getElementById('btn-euros').addEventListener('click', function() {
+        this.classList.add('active');
+        document.getElementById('btn-dolares').classList.remove('active');
+        tasaCompra = 62.50;
+        tasaVenta = 65.00;
+        document.getElementById('rate-compra').innerText = '€ 1.00 = RD$ 62.50';
+        document.getElementById('rate-venta').innerText = '€ 1.00 = RD$ 65.00';
+      });
+    
+      // Función para calcular
+      function calcular() {
+        let compra = parseFloat(document.getElementById('compra-input').value) || 0;
+        let venta = parseFloat(document.getElementById('venta-input').value) || 0;
+    
+        document.getElementById('compra-resultado').value = (compra * tasaCompra).toFixed(2) + ' RD$';
+        document.getElementById('venta-resultado').value = (venta * tasaVenta).toFixed(2) + ' RD$';
+      }
+    
+      // Función para mostrar la calculadora
+      function mostrarCalculadora() {
+        document.getElementById('inicio').style.display = 'none';
+        document.getElementById('calculadora').style.display = 'block';
+      }
+    </script>
+ 
+
+
+</body>
+</html> 
